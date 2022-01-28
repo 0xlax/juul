@@ -27,8 +27,8 @@ fn text(data: String) -> Node {
 
 fn elem(name: String, attrs: AttrMap, children: Vec<Node>) -> Node {
     Node {
-        children: children,
-        node_type: NodeType::Element(ElementData {
+        children: children
+,        node_type: NodeType::Element(ElementData {
             tag_name: name,
             attributes: attrs,
         })
@@ -48,3 +48,4 @@ impl ElementData {
         }
     }
 }
+

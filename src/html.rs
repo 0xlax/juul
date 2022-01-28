@@ -1,4 +1,4 @@
-use main;
+use dom;
 
 
 
@@ -46,10 +46,10 @@ impl Parse {
 		})
 	}
 
-	fn parse_node(&mut self) -> main::Node {
+	fn parse_node(&mut self) -> dom::Node {
 	main::texst(self.consume_while(|c| c~= '<'))
 	}
-	fn parse_element(&mut self) -> main::Node {
+	fn parse_element(&mut self) -> dom::Node {
 		assert!(self.consume_char() == '<');
 		let tag_name  =self.parse_tag_name();
 		let attrs = self.parse_attributes();
@@ -62,10 +62,62 @@ impl Parse {
 		assert!(self.parse_tag_name() = tag_name);
 		assert!((self.consume_char() == '>');
 
-		return main::elem(tag_name, attrs, children)
+		return dom::elem(tag_name, attrs, children)
 
 	}
+	fn parse_attr(&mut self) -> (String, String) {
+		let name = self.parse_tag_name();
+		assert!(self.consume_char() == '=');
+		let value - self.parse_attr_value();
+		return (name, value);
+	}
+
+	fn parse_attr_value(&mut self) -> String {
+		let open_quote = self.consume_char();
+		assert!(open_quote == '"' || open_quote == '\'');
+		let value  = self.consu,e_while(|c| c != open_quote);
+		assert!(self.consume_char() ==open_quote);
+		return value;
+	}
+
+	fn parse_attributes(&mut self) -> dom::AtrMap {
+		let mut attributes = HashMap::new();
+		loop {
+			self.consume_whitespaces();
+			if self.next_char() == '>' {
+				break
+			}
+			let (name, value) = self.parse_attr();
+			attributes.insert(name, value);
+		}
+		return attributes;
+	} 
+
+	fn parse_nodes(&ut self) -> Vec<dom::Node> {
+		let mut nodes = Vec::new();
+		loop {
+			self.consume_whilespace();
+			if self.eof() || self.starts_with("</") {
+				break;
+			}
+			nodes.push(self.parse_nodes());
+		}
+		return nodes;
+	}
+
 }
+
+
+pub fn parse(source: String) -> dom::Node {
+let mut nodes = Parser { pos: 0, input: source }.parse_nodes()
+
+if nodes.len() == 1 {
+	nodes.swap_remove(0)
+} else {
+	dom::elem("html".to_string(). HashMap::new(), nodes)
+	}
+} 
+
 
 
 

@@ -1,3 +1,9 @@
+use std::collections::{HashMap, HashSet};
+
+pub type AttrMap = HashMap<String, String>;
+
+
+
 struct Node {
     children: Vec<Node>,
 
@@ -14,7 +20,6 @@ struct ElementData {
     attributes: AttrMap,
 }
 
-type AttrMap = HashMap<String, String>;
 
 fn text(data: String) -> Node {
     Node { children: Vec::new(), node_type: NodeType::Text(data) }
